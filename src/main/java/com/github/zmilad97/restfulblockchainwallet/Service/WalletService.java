@@ -1,14 +1,18 @@
 package com.github.zmilad97.restfulblockchainwallet.Service;
 
 import com.github.zmilad97.restfulblockchainwallet.Config.Config;
-import org.apache.http.client.methods.CloseableHttpResponse;
+import com.github.zmilad97.restfulblockchainwallet.Module.Transaction;
+import com.google.gson.Gson;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,22 +32,63 @@ public class WalletService {
         System.out.println("pubKey" + pubKey);
 
         try {
-
-            CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-            HttpPost httpPost = new HttpPost(config.getAddress()+"/add");
+            HttpClient httpClient = HttpClientBuilder.create().build();
+            HttpPost httpPost = new HttpPost(config.getAddress() + "/wallet/add");
             StringEntity params = new StringEntity(priKey);
             httpPost.addHeader("Content-Type", "application/json");
             httpPost.setEntity(params);
-            CloseableHttpResponse httpResponse = httpClient.execute(httpPost);
+            HttpResponse httpResponse = httpClient.execute(httpPost);
+            if(httpResponse.getStatusLine().getStatusCode() == 200){
             System.out.println(httpResponse.getEntity().getContent());
             keys.add(priKey);
             keys.add(pubKey);
-            return keys;
+            return keys;}
         } catch (IOException e) {
             e.printStackTrace();
             e.printStackTrace();
         }
         return null;
     }
+
+
+    public String newTransaction(Transaction transaction,Config config) {
+        Gson gson = new Gson();
+        StringEntity params;
+        String error = "no error" ;
+        try {
+            HttpClient httpClient = HttpClientBuilder.create().build();
+            HttpPost httpPost = new HttpPost(config.getAddress()+"/transaction/new");
+            params = new StringEntity(gson.toJson(transaction));
+            httpPost.addHeader("Content-Type", "application/json");
+            httpPost.setEntity(params);
+            HttpResponse httpResponse = httpClient.execute(httpPost);
+            System.out.println(httpResponse.getStatusLine().getStatusCode());
+            return httpResponse.getStatusLine().toString();
+//            error = " shit happens";
+//            if(httpResponse.getStatusLine().getStatusCode() == 200){
+//                return "transaction added";
+//            }
+        } catch (UnsupportedEncodingException e) {
+            error = e.getMessage();
+        } catch (ClientProtocolException e) {
+            error = e.getMessage();
+        } catch (IOException e) {
+            error = e.getMessage();
+        }
+        return error ;
+    }
+/*   //TODO : COMPLETE THIS METHOD
+    private HttpResponse httpPostCall(String address,Object object){
+        HttpClient httpClient = HttpClientBuilder.create().build();
+        HttpPost httpPost = new HttpPost();
+        StringEntity params;
+        try {
+            params = new StringEntity(new Gson().toJson(object));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }*/
+
+
 
 }
