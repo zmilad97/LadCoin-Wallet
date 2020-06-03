@@ -2,6 +2,7 @@ package com.github.zmilad97.restfulblockchainwallet.Service;
 
 import com.github.zmilad97.restfulblockchainwallet.Config.Config;
 import com.github.zmilad97.restfulblockchainwallet.Module.Transaction;
+import com.github.zmilad97.restfulblockchainwallet.Security.AsymmetricCryptography;
 import com.google.gson.Gson;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -23,7 +24,8 @@ public class WalletService {
 
     Cryptography cryptography = new Cryptography();
     Random random = new Random();
-
+    AsymmetricCryptography generateKeys = new AsymmetricCryptography();
+/*
     public List<String> generateWallet(Config config) throws NoSuchAlgorithmException {
         String priKey = cryptography.toHexString(cryptography.getSha(String.valueOf(random.nextDouble())));
         String pubKey = cryptography.toHexString(cryptography.getSha(String.valueOf(random.nextDouble())));
@@ -49,12 +51,21 @@ public class WalletService {
         }
         return null;
     }
-
+*/
+    public List<Key> generateWallet(){
+        generateKeys.generateKeys();
+        System.out.println("Private key : " + generateKeys.getPrivateKey());
+        System.out.println("Public Key : " + generateKeys.getPublicKey());
+        List <Key> keys = new ArrayList<>();
+        keys.add(generateKeys.getPrivateKey());
+        keys.add(generateKeys.getPublicKey());
+        return keys;
+    }
 
     public String newTransaction(Transaction transaction,Config config) {
         Gson gson = new Gson();
         StringEntity params;
-        String error = "no error" ;
+        String error = "unknown error" ;
         try {
             HttpClient httpClient = HttpClientBuilder.create().build();
             HttpPost httpPost = new HttpPost(config.getAddress()+"/transaction/new");
@@ -63,11 +74,9 @@ public class WalletService {
             httpPost.setEntity(params);
             HttpResponse httpResponse = httpClient.execute(httpPost);
             System.out.println(httpResponse.getStatusLine().getStatusCode());
-            return httpResponse.getStatusLine().toString();
-//            error = " shit happens";
-//            if(httpResponse.getStatusLine().getStatusCode() == 200){
-//                return "transaction added";
-//            }
+            if(httpResponse.getStatusLine().getStatusCode() == 200){
+                return "transaction added";
+            }
         } catch (UnsupportedEncodingException e) {
             error = e.getMessage();
         } catch (ClientProtocolException e) {

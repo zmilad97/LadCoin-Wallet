@@ -1,15 +1,13 @@
 package com.github.zmilad97.restfulblockchainwallet.Controller;
 
 import com.github.zmilad97.restfulblockchainwallet.Config.Config;
+import com.github.zmilad97.restfulblockchainwallet.Module.Transaction;
 import com.github.zmilad97.restfulblockchainwallet.Service.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.security.NoSuchAlgorithmException;
-import java.util.List;
 
 @RestController
 public class Controller {
@@ -30,7 +28,6 @@ public class Controller {
     @RequestMapping("/config/current")
     public String currentConfig() {
         return config.getAddress();
-
     }
 
     @RequestMapping("/connectionTest")
@@ -41,14 +38,20 @@ public class Controller {
             return "Connection problem , wallet is not connected to the BlockChain core !";
     }
 
-    @RequestMapping("/add")
-    public List addWallet() throws NoSuchAlgorithmException {
-        return walletService.generateWallet(config);
+    @RequestMapping("/wallet/new")
+    public void newWallet() {
+     walletService.generateWallet();
     }
 
-    @RequestMapping(value = "/trx", method = RequestMethod.POST)
-    public void newTrx() {
+    @RequestMapping(value = "/transaction/new", method = RequestMethod.POST)
+    public String newTrx(@RequestBody Transaction transaction) {
+        return walletService.newTransaction(transaction,config);                  //TODO : MAKE TRANSACTION METHOD
+    }
 
+    @RequestMapping(value = "/wallet/status", method = RequestMethod.POST)      //TODO : ASYMMETRIC  ENCRYPTION NEEDED (RSA ALGORITHM)
+    public String walletStatus(@RequestBody String fullKey ){              //fullKey = priKey + # + pubKey---------
+        String[] keys = fullKey.split("#");                         //keys[0]= priKey || keys[1] = pubKey--------
+        return null;                                                       //Signature = f(priKey , message(transaction message))
     }
 
     @RequestMapping(value = "/test")
