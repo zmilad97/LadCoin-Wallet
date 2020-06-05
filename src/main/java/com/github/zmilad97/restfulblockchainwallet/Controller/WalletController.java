@@ -1,8 +1,9 @@
 package com.github.zmilad97.restfulblockchainwallet.Controller;
 
-import com.github.zmilad97.restfulblockchainwallet.Config.Config;
 import com.github.zmilad97.restfulblockchainwallet.Module.Transaction;
 import com.github.zmilad97.restfulblockchainwallet.Service.WalletService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,32 +11,26 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class Controller {
-    WalletService walletService;
-    Config config;
+public class WalletController {
+    private static final Logger LOG = LoggerFactory.getLogger(WalletController.class);
+    private final WalletService walletService;
 
     @Autowired
-    public Controller(WalletService walletService,Config config) {
+    public WalletController(WalletService walletService) {
         this.walletService = walletService;
-        this.config = config;
-    }
-
-    @RequestMapping(value = "/config/new", method = RequestMethod.POST)
-    public String newConfig(@RequestBody String address) {
-        return config.setAddress(address);
     }
 
     @RequestMapping("/config/current")
-    public String currentConfig() {
-        return config.getAddress();
+    public void currentConfig() {
+        LOG.info(walletService.getCoreAddress());
     }
 
     @RequestMapping("/connectionTest")
-    public String testConnection(){
-        if (config.connectionTest().equals("200"))
-            return "Wallet is connected to the BlockChain core";
+    public void testConnection(){
+        if (walletService.connectionTest().equals("200"))
+            LOG.info( "Wallet is connected to the BlockChain core");
         else
-            return "Connection problem , wallet is not connected to the BlockChain core !";
+            LOG.info("Connection problem , wallet is not connected to the BlockChain core !");
     }
 
     @RequestMapping("/wallet/new")
@@ -45,7 +40,7 @@ public class Controller {
 
     @RequestMapping(value = "/transaction/new", method = RequestMethod.POST)
     public String newTrx(@RequestBody Transaction transaction) {
-        return walletService.newTransaction(transaction,config);                  //TODO : MAKE TRANSACTION METHOD
+        return walletService.newTransaction(transaction);                  //TODO : MAKE TRANSACTION METHOD
     }
 
     @RequestMapping(value = "/wallet/status", method = RequestMethod.POST)      //TODO : ASYMMETRIC  ENCRYPTION NEEDED (RSA ALGORITHM)
