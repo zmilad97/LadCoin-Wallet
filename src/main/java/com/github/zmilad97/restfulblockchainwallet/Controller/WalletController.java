@@ -1,6 +1,6 @@
 package com.github.zmilad97.restfulblockchainwallet.Controller;
 
-import com.github.zmilad97.restfulblockchainwallet.Module.Transaction;
+import com.github.zmilad97.restfulblockchainwallet.Module.Transaction.Transaction;
 import com.github.zmilad97.restfulblockchainwallet.Service.WalletService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

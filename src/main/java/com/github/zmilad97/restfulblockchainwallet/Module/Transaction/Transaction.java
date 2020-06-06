@@ -1,7 +1,8 @@
-package com.github.zmilad97.restfulblockchainwallet.Module;
+package com.github.zmilad97.restfulblockchainwallet.Module.Transaction;
 
 
 public class Transaction {
+    private String transactionId;
     private String source;
     private String destination;
     private double amount;

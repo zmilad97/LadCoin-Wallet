@@ -1,7 +1,8 @@
 package com.github.zmilad97.restfulblockchainwallet.Service;
 
-import com.github.zmilad97.restfulblockchainwallet.Module.Transaction;
-import com.github.zmilad97.restfulblockchainwallet.Security.AsymmetricCryptography;
+import com.github.zmilad97.restfulblockchainwallet.Module.Transaction.Transaction;
+import com.github.zmilad97.restfulblockchainwallet.Security.DigitalSignature;
+import com.github.zmilad97.restfulblockchainwallet.Security.GenerateKeys;
 import com.google.gson.Gson;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -27,16 +28,18 @@ public class WalletService {
 
     @Value("${app.core-address}")
     private String coreAddress;
+    DigitalSignature digitalSignature = new DigitalSignature();
+    private GenerateKeys rsa = new GenerateKeys();
 
-    private AsymmetricCryptography generateKeys = new AsymmetricCryptography();
 
     public List<Key> generateWallet() {
-        generateKeys.generateKeys();
-        System.out.println("Private key : " + generateKeys.getPrivateKey());
-        System.out.println("Public Key : " + generateKeys.getPublicKey());
+        rsa.createKeys();
+        System.out.println("Private key : " + rsa.getPrivateKey());
+        System.out.println("Public Key : " + rsa.getPublicKey());
         List<Key> keys = new ArrayList<>();
-        keys.add(generateKeys.getPrivateKey());
-        keys.add(generateKeys.getPublicKey());
+        digitalSignature.init(rsa.getPrivateKey(),rsa.getPublicKey());
+        keys.add(rsa.getPrivateKey());
+        keys.add(rsa.getPublicKey());
         return keys;
     }
 
