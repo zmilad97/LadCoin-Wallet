@@ -1,8 +1,7 @@
 package com.github.zmilad97.restfulblockchainwallet.Service;
 
 import com.github.zmilad97.restfulblockchainwallet.Module.Transaction.Transaction;
-import com.github.zmilad97.restfulblockchainwallet.Security.DigitalSignature;
-import com.github.zmilad97.restfulblockchainwallet.Security.GenerateKeys;
+import com.github.zmilad97.restfulblockchainwallet.Security.ECDSA;
 import com.google.gson.Gson;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -18,9 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.security.Key;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Base64;
 
 @Service
 public class WalletService {
@@ -28,19 +25,16 @@ public class WalletService {
 
     @Value("${app.core-address}")
     private String coreAddress;
-    DigitalSignature digitalSignature = new DigitalSignature();
-    private GenerateKeys rsa = new GenerateKeys();
+    private ECDSA ecdsa = new ECDSA();
 
+    public void generateWallet() {
+        ecdsa.generateKeys();
+        System.out.println("Private key : " + ecdsa.getPrivateKey());
+        System.out.println("Public Key : " + ecdsa.getPublicKey());
+        System.out.println("PublicKey in string " + Base64.getEncoder().encodeToString(ecdsa.getPublicKey().getEncoded()));
+        String pubKeyHash =Base64.getEncoder().encodeToString(ecdsa.getPublicKey().getEncoded());
+        System.out.println(ecdsa.signData(ecdsa.getPrivateKey(),pubKeyHash));
 
-    public List<Key> generateWallet() {
-        rsa.createKeys();
-        System.out.println("Private key : " + rsa.getPrivateKey());
-        System.out.println("Public Key : " + rsa.getPublicKey());
-        List<Key> keys = new ArrayList<>();
-        digitalSignature.init(rsa.getPrivateKey(),rsa.getPublicKey());
-        keys.add(rsa.getPrivateKey());
-        keys.add(rsa.getPublicKey());
-        return keys;
     }
 
     public String newTransaction(Transaction transaction) {

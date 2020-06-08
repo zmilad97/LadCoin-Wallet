@@ -1,4 +1,4 @@
-package com.github.zmilad97.restfulblockchainwallet.Service;
+package com.github.zmilad97.restfulblockchainwallet.Security;
 
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;

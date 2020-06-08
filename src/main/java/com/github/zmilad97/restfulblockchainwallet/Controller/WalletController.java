@@ -51,6 +51,7 @@ public class WalletController {
 
     @RequestMapping(value = "/test")
     public void test() {
+
     }
 
 
