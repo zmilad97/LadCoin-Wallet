@@ -1,16 +1,16 @@
 package com.github.zmilad97.restfulblockchainwallet.Module.Transaction;
 
-public class trxOutput {
+public class TransactionOutput {
     private double amount;
     private String publicKeyScript;     //hash(Signature(privateKey,"pubKey"))   or hash(pubKey)    signature
 
 
-    public trxOutput(double amount, String publicKeyScript) {
+    public TransactionOutput(double amount, String publicKeyScript) {
         this.amount = amount;
         this.publicKeyScript = publicKeyScript;
     }
 
-    public trxOutput() {
+    public TransactionOutput() {
 
     }
 

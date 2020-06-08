@@ -2,7 +2,7 @@ package com.github.zmilad97.restfulblockchainwallet.Module.Transaction;
 
 
 public class Transaction {
-    private String transactionId;
+    private String transactionId;  //TODO : need to fix this class
     private String source;
     private String destination;
     private double amount;
