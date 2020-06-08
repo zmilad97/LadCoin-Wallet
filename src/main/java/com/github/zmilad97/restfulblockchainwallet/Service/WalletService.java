@@ -28,7 +28,7 @@ public class WalletService {
     private ECDSA ecdsa = new ECDSA();
 
     public void generateWallet() {
-        ecdsa.generateKeys();
+        ecdsa.generateKeys();                                                       //TODO : Fix this Method and Class
         System.out.println("Private key : " + ecdsa.getPrivateKey());
         System.out.println("Public Key : " + ecdsa.getPublicKey());
         System.out.println("PublicKey in string " + Base64.getEncoder().encodeToString(ecdsa.getPublicKey().getEncoded()));
