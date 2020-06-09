@@ -1,43 +1,44 @@
 package com.github.zmilad97.restfulblockchainwallet.Module.Transaction;
 
 
+import java.util.HashMap;
+
 public class Transaction {
     private String transactionId;  //TODO : need to fix this class
-    private String source;
-    private String destination;
-    private double amount;
+    private TransactionInput TransactionInput;
+    private TransactionOutput TransactionOutput;
+    private String transactionHash;
 
-    public Transaction(String source, String destination, double amount) {
-        this.source = source;
-        this.destination = destination;
-        this.amount = amount;
+    public String getTransactionId() {
+        return transactionId;
     }
 
-    public Transaction(){
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
+    }
+
+    public TransactionInput getTransactionInput() {
+        return TransactionInput;
+    }
+
+    public void setTransactionInput(String previousTransactionHash, int indexReferenced, HashMap<String, String> scriptSignature) {
+        this.TransactionInput.setPreviousTransactionHash(previousTransactionHash);
+        this.TransactionInput.setIndexReferenced(indexReferenced);
+        this.TransactionInput.setScriptSignature(scriptSignature);
 
     }
 
-    public String getSource() {
-        return source;
+    public TransactionOutput getTransactionOutput() {
+        return TransactionOutput;
     }
 
-    public void setSource(String source) {
-        this.source = source;
+    public void setTransactionOutput(double amount, String publicKey) {
+        this.TransactionOutput.setAmount(amount);
+        this.TransactionOutput.setPublicKeyScript(publicKey);
     }
 
-    public String getDestination() {
-        return destination;
+    public String getTransactionHash() {   //TODO : Think About This Method
+        return this.transactionHash;
     }
 
-    public void setDestination(String destination) {
-        this.destination = destination;
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
 }

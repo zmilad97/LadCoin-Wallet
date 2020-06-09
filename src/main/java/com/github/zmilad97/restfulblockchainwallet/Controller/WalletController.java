@@ -1,6 +1,6 @@
 package com.github.zmilad97.restfulblockchainwallet.Controller;
 
-import com.github.zmilad97.restfulblockchainwallet.Module.Transaction.Transaction;
+import com.github.zmilad97.restfulblockchainwallet.Module.Transaction.TRX;
 import com.github.zmilad97.restfulblockchainwallet.Service.WalletService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,8 +39,8 @@ public class WalletController {
     }
 
     @RequestMapping(value = "/transaction/new", method = RequestMethod.POST)
-    public String newTrx(@RequestBody Transaction transaction) {
-        return walletService.newTransaction(transaction);                  //TODO : MAKE TRANSACTION METHOD
+    public void newTrx(@RequestBody TRX transaction) {
+               walletService.trx(transaction);           //TODO : MAKE TRANSACTION METHOD
     }
 
     @RequestMapping(value = "/wallet/status", method = RequestMethod.POST)      //TODO : ASYMMETRIC  ENCRYPTION NEEDED (RSA ALGORITHM)

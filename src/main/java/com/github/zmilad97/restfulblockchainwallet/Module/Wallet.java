@@ -2,32 +2,37 @@ package com.github.zmilad97.restfulblockchainwallet.Module;
 
 public class Wallet {
 
-    private String priKey;
-    private String pubKey;
+    private String privateKey;
+    private String publicKey;
+    private String signature;
 
-
-    public Wallet(String priKey, String pubKey) {
-        this.priKey = priKey;
-        this.pubKey = pubKey;
-    }
 
     public Wallet(){
 
     }
 
-    public String getPriKey() {
-        return priKey;
+
+    public String getPrivateKey() {
+        return privateKey;
     }
 
-    public void setPriKey(String priKey) {
-        this.priKey = priKey;
+    public void setPrivateKey(String privateKey) {
+        this.privateKey = privateKey;
     }
 
-    public String getPubKey() {
-        return pubKey;
+    public String getPublicKey() {
+        return publicKey;
     }
 
-    public void setPubKey(String pubKey) {
-        this.pubKey = pubKey;
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
+    }
+
+    public String getSignature() {
+        return signature;
+    }
+
+    public void setSignature(String signature) {
+        this.signature = signature;
     }
 }
