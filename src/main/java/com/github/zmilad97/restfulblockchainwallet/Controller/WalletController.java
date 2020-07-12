@@ -43,7 +43,7 @@ public class WalletController {
                walletService.trx(transaction);           //TODO : MAKE TRANSACTION METHOD
     }
 
-    @RequestMapping(value = "/wallet/status", method = RequestMethod.POST)      //TODO : ASYMMETRIC  ENCRYPTION NEEDED (RSA ALGORITHM)
+    @RequestMapping(value = "/wallet/status", method = RequestMethod.POST)
     public String walletStatus(@RequestBody String fullKey ){              //fullKey = priKey + # + pubKey---------
         String[] keys = fullKey.split("#");                         //keys[0]= priKey || keys[1] = pubKey--------
         return null;                                                       //Signature = f(priKey , message(transaction message))

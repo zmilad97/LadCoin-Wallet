@@ -18,8 +18,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Base64;
 import java.util.HashMap;
@@ -31,6 +29,7 @@ public class WalletService {
     @Value("${app.core-address}")
     private String coreAddress;
     private ECDSA ecdsa = new ECDSA();
+    private Wallet wallet = new Wallet() ;
     private HashMap<String,Object> walletStatus;  //  ==  privateKey , publicKey , balance , Transactions snapshots
 
     public void generateWallet() {
@@ -41,22 +40,29 @@ public class WalletService {
         String pubKeyHash =Base64.getEncoder().encodeToString(ecdsa.getPublicKey().getEncoded());
         System.out.println("Signature :" + ecdsa.signData(ecdsa.getPrivateKey(),pubKeyHash));
         Wallet wallet = new Wallet();
-        wallet.setPrivateKey(Base64.getEncoder().encodeToString(ecdsa.getPrivateKey().getEncoded()));
-        wallet.setPublicKey(Base64.getEncoder().encodeToString(ecdsa.getPublicKey().getEncoded()));
+//        wallet.setPrivateKey(Base64.getEncoder().encodeToString(ecdsa.getPrivateKey().getEncoded()));
+//        wallet.setPublicKey(Base64.getEncoder().encodeToString(ecdsa.getPublicKey().getEncoded()));
+//        wallet.setSignature(ecdsa.signData(ecdsa.getPrivateKey(),pubKeyHash));
+        wallet.setPrivateKey(ecdsa.getPrivateKey());
+        wallet.setPublicKey(ecdsa.getPublicKey());
         wallet.setSignature(ecdsa.signData(ecdsa.getPrivateKey(),pubKeyHash));
-        saveWalletDetailsOnSystem(wallet);
+//        saveWalletDetailsOnSystem(wallet);
 
     }
 
-    public void saveWalletDetailsOnSystem(Wallet wallet){   //TODO : Fix this method and Find a better way
+/*    public void saveWalletDetailsOnSystem(Wallet wallet){   //TODO : Fix this method and Find a better way
         try {
             File file = new File("wallet.txt");
             if (file.createNewFile()) {
                 LOG.info("File created : {} " , file.getName());
                 FileWriter fileWriter = new FileWriter("wallet.txt");
-                fileWriter.write(wallet.getPrivateKey());
+                fileWriter.write(wallet.getPrivateKey().);
                 fileWriter.write(String.format("%n"));
                 fileWriter.write(wallet.getPublicKey());
+                fileWriter.write(String.format("%n"));
+                fileWriter.write(String.valueOf(wallet.getBalance()));
+                fileWriter.write(String.format("%n"));
+                fileWriter.write(wallet.getLastTransactionHash());
                 fileWriter.write(String.format("%n"));
                 fileWriter.write(wallet.getSignature());
                 fileWriter.close();
@@ -69,11 +75,15 @@ public class WalletService {
         } catch (IOException e) {
             LOG.error(e.getMessage(),e);
         }
+    }*/
+
+    public Wallet getWallet() {
+        return wallet;
     }
 
-
-
-
+    public void setWallet(Wallet wallet) {
+        this.wallet = wallet;
+    }
 
     public void trx(TRX trx){
         Transaction transaction = new Transaction();
@@ -102,7 +112,10 @@ public class WalletService {
         return "unknown error";
     }
 
-    //TODO : COMPLETE THIS METHOD
+
+
+
+
     public String getCoreAddress() {
         return coreAddress;
     }

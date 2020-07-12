@@ -1,10 +1,13 @@
 package com.github.zmilad97.restfulblockchainwallet.Security;
 
+import org.springframework.stereotype.Service;
+
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+@Service
 public class Cryptography {
 
     public byte[] getSha(String input) throws NoSuchAlgorithmException {

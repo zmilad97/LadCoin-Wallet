@@ -1,30 +1,36 @@
 package com.github.zmilad97.restfulblockchainwallet.Module;
 
+import com.github.zmilad97.restfulblockchainwallet.Module.Transaction.Transaction;
+
+import java.security.PrivateKey;
+import java.security.PublicKey;
+
 public class Wallet {
 
-    private String privateKey;
-    private String publicKey;
+    private PrivateKey privateKey;
+    private PublicKey publicKey;
     private String signature;
-
+    private double balance;
+    private String lastTransactionHash ;
+    private Transaction UTXOs ;
 
     public Wallet(){
 
     }
 
-
-    public String getPrivateKey() {
+    public PrivateKey getPrivateKey() {
         return privateKey;
     }
 
-    public void setPrivateKey(String privateKey) {
+    public void setPrivateKey(PrivateKey privateKey) {
         this.privateKey = privateKey;
     }
 
-    public String getPublicKey() {
+    public PublicKey getPublicKey() {
         return publicKey;
     }
 
-    public void setPublicKey(String publicKey) {
+    public void setPublicKey(PublicKey publicKey) {
         this.publicKey = publicKey;
     }
 
@@ -35,4 +41,29 @@ public class Wallet {
     public void setSignature(String signature) {
         this.signature = signature;
     }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+
+    public String getLastTransactionHash() {
+        return lastTransactionHash;
+    }
+
+    public void setLastTransactionHash(String lastTransactionHash) {
+        this.lastTransactionHash = lastTransactionHash;
+    }
+
+    public Transaction getUTXOs() {
+        return UTXOs;
+    }
+
+    public void setUTXOs(Transaction UTXOs) {
+        this.UTXOs = UTXOs;
+    }
+
 }
