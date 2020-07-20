@@ -21,6 +21,7 @@ public class WalletStarter implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         LOG.info("Checking wallet status , Please wait ! ...");
-        starterService.loadWallet();
+        //starterService.loadWallet();
+//        starterService.UTXOs();
     }
 }

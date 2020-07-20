@@ -7,13 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Scanner;
-
 @Service
 public class StarterService {
     private static final Logger LOG = LoggerFactory.getLogger(StarterService.class);
@@ -55,9 +48,9 @@ public class StarterService {
 
     //TODO : Make A Method To Get All The UTXOs
 
-    public Transaction UTXOs(){
-        connectionService.UTXOsRequest("s");
-        return  null;
+    public Transaction UTXOs(String s){
+        return connectionService.UTXOsRequest(s);
+
     }
     public Wallet getWallet() {
         return wallet;
