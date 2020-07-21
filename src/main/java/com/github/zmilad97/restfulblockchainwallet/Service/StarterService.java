@@ -7,19 +7,40 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+
 @Service
 public class StarterService {
     private static final Logger LOG = LoggerFactory.getLogger(StarterService.class);
     private ConnectionService connectionService;
-    private WalletService walletService ;
+    private WalletService walletService;
     private Wallet wallet;
-
+    private double currentBalance = 0;
+    private Transaction UTXOs ;
     @Autowired
-    public StarterService(ConnectionService connectionService, WalletService walletService){
+    public StarterService(ConnectionService connectionService, WalletService walletService) {
         this.connectionService = connectionService;
         this.walletService = walletService;
     }
 
+    public void loadWallet() {
+        try {
+            FileInputStream fileInputStream = new FileInputStream("Wallet.dat");
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            wallet = (Wallet) objectInputStream.readObject();
+            if (wallet != null) {
+                walletService.setWallet(wallet);
+                LOG.info(wallet.getSignature());
+                currentBalance = findUTXOs(wallet.getSignature()).getTransactionOutput().getAmount();
+                LOG.info("Wallet Loaded , Current Balance is : " + currentBalance );
+            } else
+                LOG.info("Wallet Not Found");
+        } catch (IOException | ClassNotFoundException  e) {
+            LOG.error(e.getMessage());
+        }
+    }
    /* public void loadWallet() {
         try {
             File file = new File("wallet.txt");
@@ -48,11 +69,12 @@ public class StarterService {
 
     //TODO : Make A Method To Get All The UTXOs
 
-    public Transaction UTXOs(String s){
+    public Transaction findUTXOs(String s) {
         return connectionService.UTXOsRequest(s);
-
     }
+
     public Wallet getWallet() {
         return wallet;
     }
+
 }

@@ -1,6 +1,7 @@
 package com.github.zmilad97.restfulblockchainwallet.Controller;
 
 import com.github.zmilad97.restfulblockchainwallet.Module.Transaction.TRX;
+import com.github.zmilad97.restfulblockchainwallet.Module.Transaction.Transaction;
 import com.github.zmilad97.restfulblockchainwallet.Service.StarterService;
 import com.github.zmilad97.restfulblockchainwallet.Service.WalletService;
 import org.slf4j.Logger;
@@ -53,8 +54,8 @@ public class WalletController {
     }
 
     @RequestMapping(value = "/UTXOs" , method = RequestMethod.POST)
-    public void test(@RequestBody String s) {
-        starterService.UTXOs(s);
+    public Transaction test(@RequestBody String s) {
+       return starterService.findUTXOs(s);
     }
 
 

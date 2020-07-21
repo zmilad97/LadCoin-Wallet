@@ -2,10 +2,11 @@ package com.github.zmilad97.restfulblockchainwallet.Module;
 
 import com.github.zmilad97.restfulblockchainwallet.Module.Transaction.Transaction;
 
+import java.io.Serializable;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
-public class Wallet {
+public class Wallet implements Serializable {
 
     private PrivateKey privateKey;
     private PublicKey publicKey;

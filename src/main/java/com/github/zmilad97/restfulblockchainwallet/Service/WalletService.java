@@ -18,7 +18,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Random;
@@ -39,15 +41,31 @@ public class WalletService {
         System.out.println("PublicKey in string " + Base64.getEncoder().encodeToString(ecdsa.getPublicKey().getEncoded()));
         String pubKeyHash =Base64.getEncoder().encodeToString(ecdsa.getPublicKey().getEncoded());
         System.out.println("Signature :" + ecdsa.signData(ecdsa.getPrivateKey(),pubKeyHash));
-        Wallet wallet = new Wallet();
 //        wallet.setPrivateKey(Base64.getEncoder().encodeToString(ecdsa.getPrivateKey().getEncoded()));
 //        wallet.setPublicKey(Base64.getEncoder().encodeToString(ecdsa.getPublicKey().getEncoded()));
 //        wallet.setSignature(ecdsa.signData(ecdsa.getPrivateKey(),pubKeyHash));
+
         wallet.setPrivateKey(ecdsa.getPrivateKey());
         wallet.setPublicKey(ecdsa.getPublicKey());
         wallet.setSignature(ecdsa.signData(ecdsa.getPrivateKey(),pubKeyHash));
+        wallet.setLastTransactionHash(null);
+        wallet.setBalance(0);
+        wallet.setUTXOs(null);
 //        saveWalletDetailsOnSystem(wallet);
+        saveWallet(wallet);
 
+    }
+
+
+    public void saveWallet(Wallet wallet) {
+    try {
+        FileOutputStream fileOutputStream = new FileOutputStream("Wallet.dat");
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+        objectOutputStream.writeObject(wallet);
+        LOG.info("Wallet Saved On This System ! ");
+    } catch (IOException e) {
+        LOG.error(e.getMessage());
+    }
     }
 
 /*    public void saveWalletDetailsOnSystem(Wallet wallet){   //TODO : Fix this method and Find a better way
@@ -88,8 +106,8 @@ public class WalletService {
     public void trx(TRX trx){
         Transaction transaction = new Transaction();
         transaction.setTransactionId(new Random(1024).toString()); // TODO : Fix Transaction Id to be Auto Generated
-        transaction.setTransactionInput(null,0,trx.getSource()); //TODO :FIX here
-        transaction.setTransactionOutput(trx.getAmount(),trx.getDestination());
+//        transaction.setTransactionInput(null,0,trx.getSource()); //TODO :FIX here
+//        transaction.setTransactionOutput(trx.getAmount(),trx.getDestination());
     }
 
     public String newTransaction(Transaction transaction) {
