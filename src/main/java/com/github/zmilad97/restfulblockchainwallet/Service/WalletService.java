@@ -109,13 +109,13 @@ public class WalletService {
         return transactionMap;
     }
 
-    public String sendTransaction(Transaction transaction) {
+    public String sendTransaction(Map<String,Transaction> transactionMap) {
         Gson gson = new Gson();
         StringEntity params;
         try {
             HttpClient httpClient = HttpClientBuilder.create().build();
             HttpPost httpPost = new HttpPost(this.coreAddress + "/transaction/new");
-            params = new StringEntity(gson.toJson(transaction));
+            params = new StringEntity(gson.toJson(transactionMap));
             httpPost.addHeader("Content-Type", "application/json");
             httpPost.setEntity(params);
             HttpResponse httpResponse = httpClient.execute(httpPost);

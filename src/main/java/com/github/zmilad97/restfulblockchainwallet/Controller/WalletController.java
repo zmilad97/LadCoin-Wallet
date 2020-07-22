@@ -45,7 +45,7 @@ public class WalletController {
 
     @RequestMapping(value = "/transaction/new", method = RequestMethod.POST)
     public void newTrx(@RequestBody HashMap<String,String> transactionDetails) {
-        walletService.newTransaction(transactionDetails);
+        walletService.sendTransaction(walletService.newTransaction(transactionDetails));
     }
 
     @RequestMapping(value = "/wallet/status", method = RequestMethod.POST)   //TODO : Fix this Method
