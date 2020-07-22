@@ -37,6 +37,7 @@ public class StarterService {
                 LOG.info(wallet.getSignature());
                 String publicKey = Base64.getEncoder().encodeToString(wallet.getPublicKey().getEncoded());
                 currentBalance = findUTXOs(publicKey).getTransactionOutput().getAmount();
+                wallet.setBalance(currentBalance);
                 LOG.info("Wallet Loaded , Current Balance is : " + currentBalance);
             } else
                 LOG.info("Wallet Not Found");
