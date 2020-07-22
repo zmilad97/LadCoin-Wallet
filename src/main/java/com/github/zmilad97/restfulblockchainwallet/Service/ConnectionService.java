@@ -24,14 +24,14 @@ public class ConnectionService {
     public ConnectionService() {
     }
 
-    public Transaction UTXOsRequest(String signature) {
+    public Transaction UTXOsRequest(String publicKey) {
         final HttpClient httpClient = HttpClient.newBuilder()
                 .version(HttpClient.Version.HTTP_2)
                 .build();
         String address = coreAddress +"/UTXOs";
 
         HttpRequest request = HttpRequest.newBuilder()
-                .POST(HttpRequest.BodyPublishers.ofString(signature))
+                .POST(HttpRequest.BodyPublishers.ofString(publicKey))
                 .uri(URI.create(address))
                 .setHeader("Wallet", "UTXOs")
                 .build();

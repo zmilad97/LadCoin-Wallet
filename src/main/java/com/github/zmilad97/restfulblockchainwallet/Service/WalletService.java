@@ -68,32 +68,7 @@ public class WalletService {
     }
     }
 
-/*    public void saveWalletDetailsOnSystem(Wallet wallet){   //TODO : Fix this method and Find a better way
-        try {
-            File file = new File("wallet.txt");
-            if (file.createNewFile()) {
-                LOG.info("File created : {} " , file.getName());
-                FileWriter fileWriter = new FileWriter("wallet.txt");
-                fileWriter.write(wallet.getPrivateKey().);
-                fileWriter.write(String.format("%n"));
-                fileWriter.write(wallet.getPublicKey());
-                fileWriter.write(String.format("%n"));
-                fileWriter.write(String.valueOf(wallet.getBalance()));
-                fileWriter.write(String.format("%n"));
-                fileWriter.write(wallet.getLastTransactionHash());
-                fileWriter.write(String.format("%n"));
-                fileWriter.write(wallet.getSignature());
-                fileWriter.close();
-                LOG.info("wallet saved to file : {} " , file.getName());
 
-            } else {
-                LOG.info("File Already Exists");
-            }
-
-        } catch (IOException e) {
-            LOG.error(e.getMessage(),e);
-        }
-    }*/
 
     public Wallet getWallet() {
         return wallet;

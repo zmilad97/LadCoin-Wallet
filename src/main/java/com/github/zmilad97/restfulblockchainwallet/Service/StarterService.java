@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.Base64;
 
 @Service
 public class StarterService {
@@ -33,7 +34,8 @@ public class StarterService {
             if (wallet != null) {
                 walletService.setWallet(wallet);
                 LOG.info(wallet.getSignature());
-                currentBalance = findUTXOs(wallet.getSignature()).getTransactionOutput().getAmount();
+                String publicKey = Base64.getEncoder().encodeToString(wallet.getPublicKey().getEncoded());
+                currentBalance = findUTXOs(publicKey).getTransactionOutput().getAmount();
                 LOG.info("Wallet Loaded , Current Balance is : " + currentBalance );
             } else
                 LOG.info("Wallet Not Found");
