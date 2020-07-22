@@ -1,6 +1,5 @@
 package com.github.zmilad97.restfulblockchainwallet.Controller;
 
-import com.github.zmilad97.restfulblockchainwallet.Module.Transaction.TRX;
 import com.github.zmilad97.restfulblockchainwallet.Module.Transaction.Transaction;
 import com.github.zmilad97.restfulblockchainwallet.Service.StarterService;
 import com.github.zmilad97.restfulblockchainwallet.Service.WalletService;
@@ -11,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
 
 @RestController
 public class WalletController {
@@ -43,11 +44,11 @@ public class WalletController {
     }
 
     @RequestMapping(value = "/transaction/new", method = RequestMethod.POST)
-    public void newTrx(@RequestBody TRX transaction) {
-        walletService.trx(transaction);           //TODO : MAKE TRANSACTION METHOD
+    public void newTrx(@RequestBody HashMap<String,String> transactionDetails) {
+        walletService.newTransaction(transactionDetails);
     }
 
-    @RequestMapping(value = "/wallet/status", method = RequestMethod.POST)
+    @RequestMapping(value = "/wallet/status", method = RequestMethod.POST)   //TODO : Fix this Method
     public String walletStatus(@RequestBody String fullKey) {              //fullKey = priKey + # + pubKey---------
         String[] keys = fullKey.split("#");                         //keys[0]= priKey || keys[1] = pubKey--------
         return null;                                                       //Signature = f(priKey , message(transaction message))

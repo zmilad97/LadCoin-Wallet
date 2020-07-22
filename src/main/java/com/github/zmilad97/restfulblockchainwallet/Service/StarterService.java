@@ -19,7 +19,8 @@ public class StarterService {
     private WalletService walletService;
     private Wallet wallet;
     private double currentBalance = 0;
-    private Transaction UTXOs ;
+    private Transaction UTXOs;
+
     @Autowired
     public StarterService(ConnectionService connectionService, WalletService walletService) {
         this.connectionService = connectionService;
@@ -34,46 +35,25 @@ public class StarterService {
             if (wallet != null) {
                 walletService.setWallet(wallet);
                 LOG.info(wallet.getSignature());
-
                 String publicKey = Base64.getEncoder().encodeToString(wallet.getPublicKey().getEncoded());
                 currentBalance = findUTXOs(publicKey).getTransactionOutput().getAmount();
-                LOG.info("Wallet Loaded , Current Balance is : " + currentBalance );
+                LOG.info("Wallet Loaded , Current Balance is : " + currentBalance);
             } else
                 LOG.info("Wallet Not Found");
-        } catch (IOException | ClassNotFoundException  e) {
+        } catch (IOException | ClassNotFoundException e) {
             LOG.error(e.getMessage());
         }
     }
-   /* public void loadWallet() {
-        try {
-            File file = new File("wallet.txt");
-            Scanner sc = null;
-            try {
-                sc = new Scanner(file);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            List<String> walletDetails = new ArrayList<>();
-            while (sc.hasNextLine())
-                walletDetails.add(sc.nextLine());
-            for(int i = 0 ; i < walletDetails.size();i++)
-                LOG.info(walletDetails.get(i));
-            wallet.setPrivateKey(walletDetails.get(0));
-            wallet.setPublicKey(walletDetails.get(1));
-            wallet.setSignature(walletDetails.get(2));
-            wallet.setBalance(Double.valueOf(walletDetails.get(3)));
-            wallet.setLastTransactionHash(walletDetails.get(4));
-            walletService.setWallet(wallet);
-
-        } catch (FileNotFoundException e) {
-            LOG.error(e.getMessage());
-        }
-    }*/
 
     //TODO : Make A Method To Get All The UTXOs
 
     public Transaction findUTXOs(String s) {
-        return connectionService.UTXOsRequest(s);
+        UTXOs = connectionService.UTXOsRequest(s);
+        return UTXOs;
+    }
+
+    public Transaction getUTXOs() {
+        return UTXOs;
     }
 
     public Wallet getWallet() {

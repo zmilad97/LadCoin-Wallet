@@ -9,6 +9,17 @@ public class Transaction {
     private String transactionHash;
 
 
+    public Transaction(String transactionId, TransactionInput transactionInput, TransactionOutput transactionOutput) {
+        this.transactionId = transactionId;
+        TransactionInput = transactionInput;
+        TransactionOutput = transactionOutput;
+    }
+
+    public Transaction(){
+
+    }
+
+
     public String getTransactionId() {
         return transactionId;
     }
