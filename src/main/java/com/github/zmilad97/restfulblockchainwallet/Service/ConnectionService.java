@@ -13,6 +13,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.List;
 
 @Service
 public class ConnectionService {
@@ -24,7 +25,7 @@ public class ConnectionService {
     public ConnectionService() {
     }
 
-    public Transaction UTXOsRequest(String publicKey) {
+    public List<Transaction> UTXOsRequest(String publicKey) {
         final HttpClient httpClient = HttpClient.newBuilder()
                 .version(HttpClient.Version.HTTP_2)
                 .build();
@@ -36,12 +37,13 @@ public class ConnectionService {
                 .setHeader("Wallet", "UTXOs")
                 .build();
 
-        HttpResponse<String> response = null;
+        HttpResponse<String> response ;
         try {
 
             response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            Transaction transaction = new ObjectMapper().readValue(response.body(),Transaction.class);
-            return transaction;
+//            List<Transaction> UTXOsList = new ObjectMapper().readValue(response.body(),List.class);
+//            return UTXOsList;
+            return new ObjectMapper().readValue(response.body(),List.class);
         } catch (IOException | InterruptedException e) {
             LOG.error(e.getMessage());
         }

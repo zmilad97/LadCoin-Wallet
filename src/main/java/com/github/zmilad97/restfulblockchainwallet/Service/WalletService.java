@@ -23,10 +23,7 @@ import org.springframework.stereotype.Service;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class WalletService {
@@ -77,13 +74,15 @@ public class WalletService {
 
     public Map<String, Transaction> newTransaction (HashMap<String, String> transactionDetails) {
         Transaction transaction = new Transaction();
-        Transaction UTXOs = starterService.getUTXOs();
+        List<Transaction> UTXOsList = starterService.getUTXOs();
         TransactionInput transactioninput = new TransactionInput();
         TransactionOutput transactionOutput = new TransactionOutput();
         Map<String, Transaction> transactionMap = new HashMap<>();
 
         transaction.setTransactionId(new Random(1024).toString()); // TODO : Fix Transaction Id to be Auto Generated
-
+        Transaction UTXOs = chooseUTXOs(UTXOsList,Double.parseDouble(transactionDetails.get("amount")));
+        if(UTXOs == null)
+            return null;
         transactioninput.setPreviousTransactionHash(UTXOs.getTransactionHash());
         transactioninput.setIndexReferenced(UTXOs.getTransactionInput().getIndexReferenced() + 1);
         transactioninput.setScriptSignature(starterService.getWallet().getSignature());
@@ -107,6 +106,13 @@ public class WalletService {
         }
 
         return transactionMap;
+    }
+
+    public Transaction chooseUTXOs(List<Transaction> UTXOsList,double amount){
+        for(int i = UTXOsList.size()-1;i >=0 ; i--)
+            if(UTXOsList.get(i).getTransactionOutput().getAmount()>=amount)
+                return UTXOsList.get(i);
+        return null;
     }
 
     public String sendTransaction(Map<String,Transaction> transactionMap) {

@@ -11,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.Base64;
+import java.util.List;
 
 @Service
 public class StarterService {
@@ -19,7 +20,7 @@ public class StarterService {
     private WalletService walletService;
     private Wallet wallet;
     private double currentBalance = 0;
-    private Transaction UTXOs;
+    private List<Transaction> UTXOs;
 
     @Autowired
     public StarterService(ConnectionService connectionService, WalletService walletService) {
@@ -36,7 +37,8 @@ public class StarterService {
                 walletService.setWallet(wallet);
                 LOG.info(wallet.getSignature());
                 String publicKey = Base64.getEncoder().encodeToString(wallet.getPublicKey().getEncoded());
-                currentBalance = findUTXOs(publicKey).getTransactionOutput().getAmount();
+                currentBalance = getCurrentBalance(publicKey);
+//                currentBalance = findUTXOs(publicKey).getTransactionOutput().getAmount();
                 wallet.setBalance(currentBalance);
                 LOG.info("Wallet Loaded , Current Balance is : " + currentBalance);
             } else
@@ -44,16 +46,29 @@ public class StarterService {
         } catch (IOException | ClassNotFoundException e) {
             LOG.error(e.getMessage());
         }
-    }
+    }//        String hashSignature = null;
+//        try {
+//            hashSignature = cryptography.toHexString(cryptography.getSha(signature));
+//        } catch (NoSuchAlgorithmException e) {
+//            e.printStackTrace();
+//        }
 
     //TODO : Make A Method To Get All The UTXOs
 
-    public Transaction findUTXOs(String s) {
+    public List<Transaction> findUTXOs(String s) {
         UTXOs = connectionService.UTXOsRequest(s);
         return UTXOs;
     }
 
-    public Transaction getUTXOs() {
+    public double getCurrentBalance(String signature){
+        List<Transaction> UTXOsList ;
+        UTXOsList = findUTXOs(signature);
+        for (int i = UTXOsList.size()-1 ; i>=0 ; i--)
+           this.currentBalance+= UTXOsList.get(i).getTransactionOutput().getAmount();
+        return currentBalance;
+    }
+
+    public List<Transaction> getUTXOs() {
         return UTXOs;
     }
 
