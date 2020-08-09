@@ -43,6 +43,10 @@ public class Transaction {
         this.TransactionOutput = transactionOutput;
     }
 
+    public void setTransactionHash(String transactionHash) {
+        this.transactionHash = transactionHash;
+    }
+
     public String getTransactionHash() {   //TODO : Think About This Method
 
         return this.transactionHash;

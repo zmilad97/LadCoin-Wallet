@@ -2,11 +2,11 @@ package com.github.zmilad97.restfulblockchainwallet.Module.Transaction;
 
 public class TransactionOutput {
     private double amount;
-    private String publicKeyScript;
+    private String signature;
 
-    public TransactionOutput(double amount, String publicKeyScript) {
+    public TransactionOutput(double amount, String signature) {
         this.amount = amount;
-        this.publicKeyScript = publicKeyScript;
+        this.signature = signature;
     }
 
     public TransactionOutput() {
@@ -21,16 +21,15 @@ public class TransactionOutput {
         this.amount = amount;
     }
 
-    public String getPublicKeyScript() {
-        return publicKeyScript;
+    public String getSignature() {
+        return signature;
     }
 
-    public void setPublicKeyScript(String publicKeyScript) {
-        this.publicKeyScript = publicKeyScript;
+    public void setSignature(String signature) {
+        this.signature = signature;
     }
 
-
- /*   private double amount;
+    /*   private double amount;
     private String publicKeyScript;     //hash(Signature(privateKey,"pubKey"))   or hash(pubKey)    signature
 
 

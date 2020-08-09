@@ -1,61 +1,39 @@
 package com.github.zmilad97.restfulblockchainwallet.Module.Transaction;
 
+import java.util.HashMap;
+
 public class TransactionInput {
-   /* private String previousTransactionHash;
-    private int indexReferenced;
-    private String scriptSignature; //proves that i own the pubKeyScript in trxOutput contains Signature(privateKey,pubKey)
 
-    public String getPreviousTransactionHash() {
+    private HashMap<Integer , String> previousTransactionHash;
+    private HashMap<Integer,Integer> indexReferenced;
+    private String pubKey;
+
+    public HashMap<Integer, String> getPreviousTransactionHash() {
         return previousTransactionHash;
     }
-
-    public int getIndexReferenced() {
+    public void addPreviousTransactionHash(int i , String s){
+        this.previousTransactionHash.put(i,s);
+    }
+    public void setPreviousTransactionHash(HashMap<Integer, String> previousTransactionHash) {
+        this.previousTransactionHash = previousTransactionHash;
+    }
+    public HashMap<Integer, Integer> getIndexReferenced() {
         return indexReferenced;
     }
 
-    public void setIndexReferenced(int indexReferenced) {
+    public void addIndexReferenced(int i , int j){
+
+    }
+
+    public void setIndexReferenced(HashMap<Integer, Integer> indexReferenced) {
         this.indexReferenced = indexReferenced;
     }
 
-    public String getScriptSignature() {
-        return scriptSignature;
+    public String getPubKey() {
+        return pubKey;
     }
 
-    public void setScriptSignature(String scriptSignature) {
-        this.scriptSignature = scriptSignature;
+    public void setPubKey(String pubKey) {
+        this.pubKey = pubKey;
     }
-
-    public void setPreviousTransactionHash(String previousTransactionHash) {
-        this.previousTransactionHash = previousTransactionHash;
-    }*/
-
-    private String previousTransactionHash;
-    private int indexReferenced;
-    private String scriptSignature;
-
-    public String getPreviousTransactionHash() {
-        return previousTransactionHash;
-    }
-
-    public void setPreviousTransactionHash(String previousTransactionHash) {
-        this.previousTransactionHash = previousTransactionHash;
-    }
-
-    public int getIndexReferenced() {
-        return indexReferenced;
-    }
-
-    public void setIndexReferenced(int indexReferenced) {
-        this.indexReferenced = indexReferenced;
-    }
-
-    public String getScriptSignature() {
-
-        return scriptSignature;
-    }
-
-    public void setScriptSignature(String scriptSignature) {
-        this.scriptSignature = scriptSignature;
-    }
-
 }

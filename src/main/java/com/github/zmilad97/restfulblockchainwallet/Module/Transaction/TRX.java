@@ -1,7 +1,7 @@
 package com.github.zmilad97.restfulblockchainwallet.Module.Transaction;
 
 import java.util.HashMap;
-
+//TODO : This Class Seems Useless
 public class TRX {
     private HashMap<String,String> source ;         //Signature,message = hash pubKey
     private String destination ;                    // public id

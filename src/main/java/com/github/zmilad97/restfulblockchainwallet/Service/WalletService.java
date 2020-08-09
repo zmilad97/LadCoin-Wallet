@@ -71,8 +71,7 @@ public class WalletService {
         }
     }
 
-
-    public Map<String, Transaction> newTransaction (HashMap<String, String> transactionDetails) {
+    public Map<String, Transaction> newTransaction(HashMap<String, String> transactionDetails) {
         Transaction transaction = new Transaction();
         List<Transaction> UTXOsList = starterService.getUTXOs();
         TransactionInput transactioninput = new TransactionInput();
@@ -80,42 +79,66 @@ public class WalletService {
         Map<String, Transaction> transactionMap = new HashMap<>();
 
         transaction.setTransactionId(new Random(1024).toString()); // TODO : Fix Transaction Id to be Auto Generated
-        Transaction UTXOs = chooseUTXOs(UTXOsList,Double.parseDouble(transactionDetails.get("amount")));
-        if(UTXOs == null)
-            return null;
-        transactioninput.setPreviousTransactionHash(UTXOs.getTransactionHash());
-        transactioninput.setIndexReferenced(UTXOs.getTransactionInput().getIndexReferenced() + 1);
-        transactioninput.setScriptSignature(starterService.getWallet().getSignature());
 
-        transactionOutput.setAmount(Double.parseDouble(transactionDetails.get("amount")));
-        transactionOutput.setPublicKeyScript(transactionDetails.get("destination"));
-            transactionMap.put("Transaction" , transaction);
-        if (Double.parseDouble(transactionDetails.get("amount")) <= UTXOs.getTransactionOutput().getAmount()) {
+        //Choosing UTXOs for transactionInput
+        List<Transaction> chosenUTXOs = chooseUTXOs(UTXOsList, Double.parseDouble(transactionDetails.get("amount")));
+        if (chosenUTXOs.size() == 0)
+            return null; // TODO : FIX HERE
+
+        //adding chosen Transaction to map and calculating the total of transactions amount
+        Map<Integer, Transaction> UMap = new HashMap<>();
+        double total = 0;
+        for (int i = 0; i < chosenUTXOs.size(); i++) {
+            UMap.put(i, chosenUTXOs.get(i));
+            total += chosenUTXOs.get(i).getTransactionOutput().getAmount();
+            transactioninput.addPreviousTransactionHash(i, chosenUTXOs.get(i).getTransactionHash());
+        }
+        //TODO : need to remove indexReference
+        if (total != Double.parseDouble(transactionDetails.get("amount"))) {
             Transaction nextUTXO = new Transaction();
             TransactionInput nextInput = new TransactionInput();
             TransactionOutput nextOutput = new TransactionOutput();
 
-            nextInput.setPreviousTransactionHash(UTXOs.getTransactionHash());
-            nextInput.setScriptSignature(starterService.getWallet().getSignature());
-            nextInput.setIndexReferenced(UTXOs.getTransactionInput().getIndexReferenced() + 2);
+            nextInput.addPreviousTransactionHash(0, chosenUTXOs.get(chosenUTXOs.size() - 1).getTransactionHash());
+            nextInput.setPubKey(Base64.getEncoder().encodeToString(starterService.getWallet().getPublicKey().getEncoded()));
+//            nextInput.addIndexReferenced(0,chosenUTXOs.get(chosenUTXOs.size()-1).getTransactionInput().getIndexReferenced().get());
 
-            nextOutput.setPublicKeyScript(Base64.getEncoder().encodeToString(starterService.getWallet().getPublicKey().getEncoded()));
-            nextOutput.setAmount(UTXOs.getTransactionOutput().getAmount() - Double.parseDouble(transactionDetails.get("amount")));
+            nextOutput.setSignature(starterService.getWallet().getSignature());
+            nextOutput.setAmount(total - Double.parseDouble(transactionDetails.get("amount")));
 
-            transactionMap.put("UTXOs" , nextUTXO);
+            transactionMap.put("UTXOs", nextUTXO);
         }
+        for (int i = 0; i < chosenUTXOs.size() - 1; i++)
+            transactioninput.addPreviousTransactionHash(i, chosenUTXOs.get(i).getTransactionHash());
+//        transactioninput.setIndexReferenced(UTXOs.getTransactionInput().getIndexReferenced() + 1);
+        transactioninput.setPubKey(Base64.getEncoder().encodeToString(starterService.getWallet().getPublicKey().getEncoded()));
+
+        transactionOutput.setAmount(Double.parseDouble(transactionDetails.get("amount")));
+        transactionOutput.setSignature(transactionDetails.get("destination"));
+        transactionMap.put("Transaction", transaction);
+
 
         return transactionMap;
     }
 
-    public Transaction chooseUTXOs(List<Transaction> UTXOsList,double amount){
-        for(int i = UTXOsList.size()-1;i >=0 ; i--)
-            if(UTXOsList.get(i).getTransactionOutput().getAmount()>=amount)
-                return UTXOsList.get(i);
-        return null;
+    public List<Transaction> chooseUTXOs(List<Transaction> UTXOsList, double amount) {
+        double total = 0;
+        List<Transaction> UTXOs = new ArrayList<>();
+//        for (int i = UTXOsList.size() - 1; i >= 0; i--)
+//            if (UTXOsList.get(i).getTransactionOutput().getAmount() >= amount){
+//                UTXOs.add(UTXOsList.get(i));
+//                return UTXOs;
+//            }
+        for (int i = UTXOsList.size() - 1; i >= 0; i--) {
+            total += UTXOsList.get(i).getTransactionOutput().getAmount();
+            UTXOs.add(UTXOsList.get(i));
+            if (total >= amount)
+                return UTXOs;
+        }
+        return new ArrayList();
     }
 
-    public String sendTransaction(Map<String,Transaction> transactionMap) {
+    public String sendTransaction(Map<String, Transaction> transactionMap) {
         Gson gson = new Gson();
         StringEntity params;
         try {
@@ -133,6 +156,10 @@ public class WalletService {
             LOG.error(e.getMessage(), e);
         }
         return "unknown error";
+    }
+
+    public List<Transaction> showUTXOs() {
+        return starterService.getUTXOs();
     }
 
     public void setWallet(Wallet wallet) {

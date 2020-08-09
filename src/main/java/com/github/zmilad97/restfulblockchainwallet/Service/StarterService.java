@@ -17,15 +17,15 @@ import java.util.List;
 public class StarterService {
     private static final Logger LOG = LoggerFactory.getLogger(StarterService.class);
     private ConnectionService connectionService;
-    private WalletService walletService;
+//    private WalletService walletService;
     private Wallet wallet;
     private double currentBalance = 0;
     private List<Transaction> UTXOs;
 
     @Autowired
-    public StarterService(ConnectionService connectionService, WalletService walletService) {
+    public StarterService(ConnectionService connectionService) {
         this.connectionService = connectionService;
-        this.walletService = walletService;
+//        this.walletService = walletService;
     }
 
     public void loadWallet() {
@@ -34,7 +34,7 @@ public class StarterService {
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
             wallet = (Wallet) objectInputStream.readObject();
             if (wallet != null) {
-                walletService.setWallet(wallet);
+//                walletService.setWallet(wallet);
                 LOG.info(wallet.getSignature());
                 String publicKey = Base64.getEncoder().encodeToString(wallet.getPublicKey().getEncoded());
                 currentBalance = getCurrentBalance(publicKey);
@@ -55,15 +55,15 @@ public class StarterService {
 
     //TODO : Make A Method To Get All The UTXOs
 
-    public List<Transaction> findUTXOs(String s) {
-        UTXOs = connectionService.UTXOsRequest(s);
+    public List<Transaction> findUTXOs(String signature) {
+        UTXOs = connectionService.UTXOsRequest(signature);
         return UTXOs;
     }
 
     public double getCurrentBalance(String signature){
         List<Transaction> UTXOsList ;
         UTXOsList = findUTXOs(signature);
-        for (int i = UTXOsList.size()-1 ; i>=0 ; i--)
+        for (int i = UTXOsList.size() -1 ; i>=0 ; i--)
            this.currentBalance+= UTXOsList.get(i).getTransactionOutput().getAmount();
         return currentBalance;
     }
