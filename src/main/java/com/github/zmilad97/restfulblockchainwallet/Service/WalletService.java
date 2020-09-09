@@ -78,7 +78,7 @@ public class WalletService {
         TransactionOutput transactionOutput = new TransactionOutput();
         Map<String, Transaction> transactionMap = new HashMap<>();
 
-        transaction.setTransactionId(new Random(1024).toString()); // TODO : Fix Transaction Id to be Auto Generated
+       transaction.setTransactionId("404"); // TODO : Fix Transaction Id to be Auto Generated
 
         //Choosing UTXOs for transactionInput
         List<Transaction> chosenUTXOs = chooseUTXOs(UTXOsList, Double.parseDouble(transactionDetails.get("amount")));

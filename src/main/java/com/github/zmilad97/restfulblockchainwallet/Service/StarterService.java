@@ -35,7 +35,8 @@ public class StarterService {
             wallet = (Wallet) objectInputStream.readObject();
             if (wallet != null) {
 //                walletService.setWallet(wallet);
-                LOG.info(wallet.getSignature());
+                LOG.info("signature : " + wallet.getSignature());
+                LOG.info("publicKey : " + Base64.getEncoder().encodeToString(wallet.getPublicKey().getEncoded()));
                 String publicKey = Base64.getEncoder().encodeToString(wallet.getPublicKey().getEncoded());
                 currentBalance = getCurrentBalance(publicKey);
 //                currentBalance = findUTXOs(publicKey).getTransactionOutput().getAmount();
