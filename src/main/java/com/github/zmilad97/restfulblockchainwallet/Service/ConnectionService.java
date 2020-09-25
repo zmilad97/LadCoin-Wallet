@@ -22,11 +22,8 @@ public class ConnectionService {
     @Value("${app.core-address}")
     private String coreAddress;
 
-    /*@Autowired
-    public ConnectionService() {
-    }*/
 
-    public List UTXOsRequest(String publicKey) {
+    public List<Transaction> UTXOsRequest(String publicKey) {
         final HttpClient httpClient = HttpClient.newBuilder()
                 .version(HttpClient.Version.HTTP_2)
                 .build();
@@ -42,10 +39,7 @@ public class ConnectionService {
         try {
 
             response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-//            List<Transaction> UTXOsList = new ObjectMapper().readValue(response.body(),List.class);
-            List<Transaction> transactions = new ObjectMapper().readValue(response.body(), new TypeReference<List<Transaction>>() {});
-            return transactions;
-//            return new ObjectMapper().readValue(response.body(), List.class);
+            return new ObjectMapper().readValue(response.body(), new TypeReference<List<Transaction>>() {});
         } catch (IOException | InterruptedException e) {
             LOG.error(e.getMessage());
         }

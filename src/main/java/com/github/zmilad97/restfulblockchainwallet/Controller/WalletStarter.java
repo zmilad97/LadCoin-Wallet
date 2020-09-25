@@ -12,16 +12,19 @@ import org.springframework.stereotype.Component;
 public class WalletStarter implements ApplicationRunner {
     private static final Logger LOG = LoggerFactory.getLogger(WalletStarter.class);
     private final StarterService starterService;
+    private final WalletController walletController ;
 
     @Autowired
-    public WalletStarter(StarterService starterService) {
+    public WalletStarter(StarterService starterService, WalletController walletController) {
         this.starterService = starterService;
+        this.walletController = walletController;
     }
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args)  {
         LOG.info("Checking wallet status , Please wait ! ...");
         starterService.loadWallet();
+        walletController.controller();
 //      starterService.UTXOs();
     }
 

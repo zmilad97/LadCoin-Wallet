@@ -25,7 +25,6 @@ public class StarterService {
     @Autowired
     public StarterService(ConnectionService connectionService) {
         this.connectionService = connectionService;
-//        this.walletService = walletService;
     }
 
     public void loadWallet() {
@@ -34,12 +33,10 @@ public class StarterService {
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
             wallet = (Wallet) objectInputStream.readObject();
             if (wallet != null) {
-//                walletService.setWallet(wallet);
                 LOG.info("signature : " + wallet.getSignature());
                 LOG.info("publicKey : " + Base64.getEncoder().encodeToString(wallet.getPublicKey().getEncoded()));
                 String publicKey = Base64.getEncoder().encodeToString(wallet.getPublicKey().getEncoded());
                 currentBalance = getCurrentBalance(publicKey);
-//                currentBalance = findUTXOs(publicKey).getTransactionOutput().getAmount();
                 wallet.setBalance(currentBalance);
                 LOG.info("Wallet Loaded , Current Balance is : " + currentBalance);
             } else
@@ -47,12 +44,7 @@ public class StarterService {
         } catch (IOException | ClassNotFoundException e) {
             LOG.error(e.getMessage());
         }
-    }//        String hashSignature = null;
-//        try {
-//            hashSignature = cryptography.toHexString(cryptography.getSha(signature));
-//        } catch (NoSuchAlgorithmException e) {
-//            e.printStackTrace();
-//        }
+    }
 
     //TODO : Make A Method To Get All The UTXOs
 

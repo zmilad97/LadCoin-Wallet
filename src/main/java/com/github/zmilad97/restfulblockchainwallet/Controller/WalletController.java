@@ -1,54 +1,102 @@
+
 package com.github.zmilad97.restfulblockchainwallet.Controller;
 
-import com.github.zmilad97.restfulblockchainwallet.Module.Transaction.Transaction;
-import com.github.zmilad97.restfulblockchainwallet.Service.StarterService;
 import com.github.zmilad97.restfulblockchainwallet.Service.WalletService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
-@RestController
+@Service
 public class WalletController {
-    private static final Logger LOG = LoggerFactory.getLogger(WalletController.class);
+    //TODO:Connection test,new trx,new wallet , current wallet status
     private final WalletService walletService;
-    private final StarterService starterService;
 
     @Autowired
-    public WalletController(WalletService walletService, StarterService starterService) {
+    public WalletController(WalletService walletService) {
         this.walletService = walletService;
-        this.starterService = starterService;
     }
 
-    @RequestMapping("/connectionTest")
-    public void testConnection() {
-        if (walletService.connectionTest().equals("200"))
-            LOG.info("Wallet is connected to the BlockChain core");
+
+    public void controller() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("  .::  Main Menu  ::.   \n");
+        listOptions();
+        try {
+            switchCase(sc.nextInt());
+        } catch (InputMismatchException | IllegalStateException e) {
+            switchCase(0);
+        }
+    }
+
+    private void switchCase(int selectedOption) {
+        switch (selectedOption) {
+            default:
+                System.out.println("Entered option is not valid ! pls select a listed option");
+                controller();
+                break;
+            case 1:
+                if (walletService.connectionTest().equals("200"))
+                    System.out.println("Wallet is connected to the BlockChain core");
+                else
+                    System.out.println("Connection problem , wallet is not connected to the BlockChain core !");
+                break;
+
+            case 2:
+                break;
+
+            case 3:
+                HashMap<String, String> transactionDetailsMap = transactionDetails();
+                if (transactionDetailsMap != null)
+                    walletService.sendTransaction(walletService.newTransaction(transactionDetailsMap));
+                break;
+
+            case 4:
+                walletService.generateWallet();
+                break;
+
+            case 5:
+                break;
+        }
+        controller();
+    }
+
+    private HashMap<String, String> transactionDetails() {
+        HashMap<String, String> transactionDetailsMap = new HashMap<>();
+        Scanner scanner = new Scanner(System.in);
+        try {
+
+            transactionDetails().put("publicKey", Base64.getEncoder()
+                    .encodeToString(walletService.getWallet().getPublicKey().getEncoded()));
+        }catch (NullPointerException e){
+            System.out.println("Wallet is not loaded , maybe you have no wallet , try to create one");
+            controller();
+        }
+
+        System.out.println("~~~~ Enter destination signature :");
+        transactionDetailsMap.put("signature", scanner.nextLine());
+
+        System.out.println("~~~~ Enter amount :");
+        transactionDetailsMap.put("amount", scanner.nextLine());
+
+        System.out.println("Transaction Details : ");
+        System.out.println("TransactionInput publicKey : " + transactionDetailsMap.get("publicKey"));
+        System.out.println("TransactionOutPut signature : " + transactionDetailsMap.get("signature"));
+        System.out.println("Transaction amount : " + transactionDetailsMap.get("amount"));
+
+        System.out.println("Confirm transaction ? (y/n)");
+        if (scanner.nextLine().equals("y"))
+            return transactionDetailsMap;
         else
-            LOG.info("Connection problem , wallet is not connected to the BlockChain core !");
+            return null;
     }
 
-    @RequestMapping("/wallet/new")
-    public void newWallet() {
-        walletService.generateWallet();
+    private void listOptions() {
+        System.out.println("1 - Connection test");
+        System.out.println("2 - Set Node");
+        System.out.println("3 - New Transaction");
+        System.out.println("4 - New Wallet");
+        System.out.println("5 - Current Wallet Status");
     }
-
-    @RequestMapping(value = "/transaction/new", method = RequestMethod.POST)
-    public void newTrx(@RequestBody HashMap<String,String> transactionDetails) {
-        walletService.sendTransaction(walletService.newTransaction(transactionDetails));
-    }
-    @RequestMapping(value = "/test" , method = RequestMethod.GET)
-    public List<Transaction> UTXOs(){
-       return walletService.showUTXOs();
-    }
-
-
-
-
 }
+
