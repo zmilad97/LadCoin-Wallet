@@ -10,7 +10,6 @@ import java.util.*;
 
 @Service
 public class WalletController {
-    //TODO:Connection test,new trx,new wallet , current wallet status
     private final WalletService walletService;
     private final Scanner sc = new Scanner(System.in);
 
@@ -64,7 +63,7 @@ public class WalletController {
             case 6:
                 System.exit(0);
         }
-        System.out.println("");
+        System.out.println();
         controller();
     }
 

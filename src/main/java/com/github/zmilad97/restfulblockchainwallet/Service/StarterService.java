@@ -46,7 +46,6 @@ public class StarterService {
         }
     }
 
-    //TODO : Make A Method To Get All The UTXOs
 
     public List<Transaction> findUTXOs(String signature) {
         UTXOs = connectionService.UTXOsRequest(signature);

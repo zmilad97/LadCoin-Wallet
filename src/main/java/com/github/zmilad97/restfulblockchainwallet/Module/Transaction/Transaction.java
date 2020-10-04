@@ -3,7 +3,7 @@ package com.github.zmilad97.restfulblockchainwallet.Module.Transaction;
 
 public class Transaction {
 
-    private String transactionId;       //TODO need to fix this class
+    private String transactionId;
     private TransactionInput TransactionInput;
     private TransactionOutput TransactionOutput;
     private String transactionHash;
@@ -47,22 +47,8 @@ public class Transaction {
         this.transactionHash = transactionHash;
     }
 
-    public String getTransactionHash() {   //TODO : Think About This Method
+    public String getTransactionHash() {
 
         return this.transactionHash;
     }
-
-
-
-    //    public void setTransactionInput(String previousTransactionHash, int indexReferenced, HashMap<String, String> scriptSignature) {
-//        this.TransactionInput.setPreviousTransactionHash(previousTransactionHash);
-//        this.TransactionInput.setIndexReferenced(indexReferenced);
-//        this.TransactionInput.setScriptSignature(scriptSignature);
-//
-//    }
-
-    /*public void setTransactionOutput(double amount, String publicKey) {
-        this.TransactionOutput.setAmount(amount);
-        this.TransactionOutput.setPublicKeyScript(publicKey);
-    }*/
 }

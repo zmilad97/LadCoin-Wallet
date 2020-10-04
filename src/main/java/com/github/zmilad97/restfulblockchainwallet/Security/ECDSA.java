@@ -6,14 +6,6 @@ import java.security.spec.ECGenParameterSpec;
 import java.util.Base64;
 
 public class ECDSA {
-  /*TODO Signature = f(priKey , message(transaction message))
-         verify : 1= ?v(signature , message, pubKey)
-         outPut = hash(publicKey)
-         google :  --ECDSA    ,   mathematical trap door
-         transaction inputs = previous transactions so dont store the wallet in blockChain core
-         input = v(signature) = (signature ,message = hash pubKey , pubKey)
-         output = hash pubKey
-    */
 
     private final ECGenParameterSpec parameterSpec = new ECGenParameterSpec("secp256k1");
 
