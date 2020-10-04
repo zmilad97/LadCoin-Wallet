@@ -77,7 +77,6 @@ public class WalletService {
         TransactionOutput transactionOutput = new TransactionOutput();
         Map<String, Transaction> transactionMap = new HashMap<>();
 
-        //TODO:Fix TransactionId to set in Core
        transaction.setTransactionId("404");
 
 
