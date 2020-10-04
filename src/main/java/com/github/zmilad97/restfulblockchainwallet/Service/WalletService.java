@@ -33,7 +33,6 @@ public class WalletService {
     private ECDSA ecdsa = new ECDSA();
     private Wallet wallet = new Wallet();
     private StarterService starterService;
-    private HashMap<String, Object> walletStatus;  //  ==  privateKey , publicKey , balance , Transactions snapshots
 
     @Autowired
     public WalletService(StarterService starterService) {
@@ -177,13 +176,13 @@ public class WalletService {
             HttpGet httpGet = new HttpGet(this.coreAddress + "/connectionTest");
             CloseableHttpResponse httpResponse = httpClient.execute(httpGet);
             return String.valueOf(httpResponse.getStatusLine().getStatusCode());
-        } catch (IOException e) {
-            LOG.error(e.getMessage(), e);
+        } catch (IOException ignored) {
         }
-        return null;
+        return "404";
     }
 
     public Wallet getWallet() {
+        final Wallet wallet = starterService.getWallet();
         return wallet;
     }
 }

@@ -1,6 +1,7 @@
 
 package com.github.zmilad97.restfulblockchainwallet.Controller;
 
+import com.github.zmilad97.restfulblockchainwallet.Module.Wallet;
 import com.github.zmilad97.restfulblockchainwallet.Service.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,8 @@ import java.util.*;
 public class WalletController {
     //TODO:Connection test,new trx,new wallet , current wallet status
     private final WalletService walletService;
+    private final Scanner sc = new Scanner(System.in);
+
 
     @Autowired
     public WalletController(WalletService walletService) {
@@ -19,7 +22,6 @@ public class WalletController {
 
 
     public void controller() {
-        Scanner sc = new Scanner(System.in);
         System.out.println("  .::  Main Menu  ::.   \n");
         listOptions();
         try {
@@ -43,6 +45,7 @@ public class WalletController {
                 break;
 
             case 2:
+                System.out.println(walletService.getCoreAddress());
                 break;
 
             case 3:
@@ -56,9 +59,26 @@ public class WalletController {
                 break;
 
             case 5:
+                currentWalletStatus();
                 break;
+            case 6:
+                System.exit(0);
         }
+        System.out.println("");
         controller();
+    }
+
+    private void currentWalletStatus(){
+        Wallet currentWallet = walletService.getWallet();
+        System.out.println("Wallet PrivateKey : "+ Base64.getEncoder().encodeToString(currentWallet.getPrivateKey().getEncoded()));
+        System.out.println("Wallet PublicKey : "+ Base64.getEncoder().encodeToString(currentWallet.getPublicKey().getEncoded()));
+        System.out.println("Wallet Signature : "+currentWallet.getSignature());
+        System.out.println("Wallet Balance : " +currentWallet.getBalance());
+        System.out.println("Do you want to see unspent transaction outputs (UTXOs)?  y/n");
+        if(sc.nextLine().equals("y")||sc.nextLine().equals("Y"))
+            System.out.println(currentWallet.getUTXOs());
+        else
+            controller();
     }
 
     private HashMap<String, String> transactionDetails() {
@@ -92,11 +112,13 @@ public class WalletController {
     }
 
     private void listOptions() {
-        System.out.println("1 - Connection test");
-        System.out.println("2 - Set Node");
+        System.out.println("1 - Connection Test");
+        System.out.println("2 - Current Node");
         System.out.println("3 - New Transaction");
         System.out.println("4 - New Wallet");
         System.out.println("5 - Current Wallet Status");
+        System.out.println("6 - Exit");
+
     }
 }
 

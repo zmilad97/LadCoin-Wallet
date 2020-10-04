@@ -17,7 +17,7 @@ import java.util.List;
 public class StarterService {
     private static final Logger LOG = LoggerFactory.getLogger(StarterService.class);
     private ConnectionService connectionService;
-//    private WalletService walletService;
+
     private Wallet wallet;
     private double currentBalance = 0;
     private List<Transaction> UTXOs;
